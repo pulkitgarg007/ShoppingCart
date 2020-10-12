@@ -15,18 +15,46 @@ public class RegularCustomer implements BillingStrategy {
 			totalAmount =totalAmount+ (product.getPrice()*entry.getValue());
 		}
 		double discount =0;
-		if(totalAmount>0 && totalAmount>=5000) {
-			discount = 0;
+		for(DiscountSlabs slab: DiscountSlabs.values()) {
+			Double compare1 = Double.parseDouble(slab.getSlab().split("-")[0]);
+			Double compare2 = null;
+			if(!slab.getSlab().split("-")[1].equals("end")) {
+				compare2 = Double.parseDouble(slab.getSlab().split("-")[1]);
+			}
+			if(totalAmount>compare1) {
+				if(compare2==null) {
+					discount = discount + (totalAmount-compare1)*slab.getDiscount()/100;
+				}else if(totalAmount>=compare2) {
+					discount = discount + (compare2-compare1)*slab.getDiscount()/100;
+				}else {
+					discount = discount + (totalAmount-compare1)*slab.getDiscount()/100;
+				}
+			}
 		}
-		if(totalAmount >=5000 && totalAmount >=10000) {
-			discount = 5000*10/100;
-		}
-		if(totalAmount>10000) {
-			discount = discount + (totalAmount-10000)*20/100;
-		}
-		
 		return totalAmount-discount;
+	}
+	
+	public enum DiscountSlabs {
+		SLAB1("0-4000",10),
+		SLAB2("4000-8000",15),
+		SLAB3("8000-12000",20),
+		SLAB4("12000-end",30);
 		
+		private String slab;
+		private double discount;
+		
+		DiscountSlabs(String slab, int discount) {
+			this.slab = slab;
+			this.discount = discount;
+		}
+
+		public String getSlab() {
+			return slab;
+		}
+
+		public double getDiscount() {
+			return discount;
+		}
 	}
 
 }

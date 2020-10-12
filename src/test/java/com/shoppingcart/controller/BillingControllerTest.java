@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.shoppingcart.application.BillingController;
 import com.shoppingcart.cart.Cart;
 import com.shoppingcart.cart.ICart;
 import com.shoppingcart.customer.CustomerType;
@@ -20,14 +21,14 @@ public class BillingControllerTest {
 	private ICart cart;
 	@Before
 	public void setup() {
-		billingController = new BillingController();
 		cart = new Cart();
+		billingController = new BillingController(cart);
 	}
 
 	@Test
 	public void test_RegularCustomer_WithPurchaseAmount5000() {
 		cart.addProduct(getProduct("1",5000d));
-		double billingAmount = billingController.calculateBillingAmount(cart, CustomerType.REGULAR);
+		double billingAmount = billingController.calculateBillingAmount(CustomerType.REGULAR);
 		assertEquals(billingAmount, 5000, 0);
 	}
 
@@ -35,15 +36,8 @@ public class BillingControllerTest {
 	public void test_RegularCustomer_WithPurchaseAmount10000() {
 		cart.addProduct(getProduct("1",5000d));
 		cart.addProduct(getProduct("1",5000d));
-		double billingAmount = billingController.calculateBillingAmount(cart, CustomerType.REGULAR);
+		double billingAmount = billingController.calculateBillingAmount(CustomerType.REGULAR);
 		assertEquals(billingAmount, 9500, 0);
-	}
-
-	private IProduct getProduct(String id, double price) {
-		IProduct product = new Product();
-		product.setId(id);
-		product.setPrice(price);
-		return product;
 	}
 
 	@Test
@@ -51,14 +45,14 @@ public class BillingControllerTest {
 		cart.addProduct(getProduct("1",5000d));
 		cart.addProduct(getProduct("1",5000d));
 		cart.addProduct(getProduct("2",5000d));
-		double billingAmount = billingController.calculateBillingAmount(cart, CustomerType.REGULAR);
+		double billingAmount = billingController.calculateBillingAmount(CustomerType.REGULAR);
 		assertEquals(billingAmount, 13500, 0);
 	}
 
 	@Test
 	public void test_PremiumCustomer_WithPurchaseAmount4000() {
 		cart.addProduct(getProduct("1",4000d));
-		double billingAmount = billingController.calculateBillingAmount(cart, CustomerType.PREMIUM);
+		double billingAmount = billingController.calculateBillingAmount(CustomerType.PREMIUM);
 		assertEquals(billingAmount, 3600, 0);
 	}
 
@@ -66,8 +60,8 @@ public class BillingControllerTest {
 	public void test_PremiumCustomer_WithPurchaseAmount8000() {
 		cart.addProduct(getProduct("1",4000d));
 		cart.addProduct(getProduct("1",4000d));
-		double billingAmount = billingController.calculateBillingAmount(cart, CustomerType.PREMIUM);
-		assertEquals(billingAmount, 7000, 0);
+		double billingAmount = billingController.calculateBillingAmount(CustomerType.PREMIUM);
+		assertEquals(7000,billingAmount, 0);
 	}
 
 	@Test
@@ -75,8 +69,8 @@ public class BillingControllerTest {
 		cart.addProduct(getProduct("1",4000d));
 		cart.addProduct(getProduct("2",4000d));
 		cart.addProduct(getProduct("3",4000d));
-		double billingAmount = billingController.calculateBillingAmount(cart, CustomerType.PREMIUM);
-		assertEquals(billingAmount, 10200, 0);
+		double billingAmount = billingController.calculateBillingAmount(CustomerType.PREMIUM);
+		assertEquals(10200,billingAmount, 0);
 	}
 
 	@Test
@@ -84,8 +78,15 @@ public class BillingControllerTest {
 		cart.addProduct(getProduct("1",4000d));
 		cart.addProduct(getProduct("4",10000d));
 		cart.addProduct(getProduct("5",6000d));
-		double billingAmount = billingController.calculateBillingAmount(cart, CustomerType.PREMIUM);
-		assertEquals(billingAmount, 15800, 0);
+		double billingAmount = billingController.calculateBillingAmount(CustomerType.PREMIUM);
+		assertEquals(15800,billingAmount, 0);
+	}
+	
+	private IProduct getProduct(String id, double price) {
+		IProduct product = new Product();
+		product.setId(id);
+		product.setPrice(price);
+		return product;
 	}
 
 }
