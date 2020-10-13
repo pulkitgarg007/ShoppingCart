@@ -18,23 +18,24 @@ public class PremiumCustomer implements BillingStrategy {
 		for(PremiumCustomerDiscountSlabs slab: PremiumCustomerDiscountSlabs.values()) {
 			Double compare1 = Double.parseDouble(slab.getSlab().split("-")[0]);
 			Double compare2 = null;
+			double discountRate = slab.getDiscount();
 			if(!slab.getSlab().split("-")[1].equals("end")) {
 				compare2 = Double.parseDouble(slab.getSlab().split("-")[1]);
 			}
 			if(totalAmount>compare1) {
 				if(compare2==null) {
-					discount = discount + (totalAmount-compare1)*slab.getDiscount()/100;
+					discount = discount + (totalAmount-compare1)*discountRate/100;
 				}else if(totalAmount>=compare2) {
-					discount = discount + (compare2-compare1)*slab.getDiscount()/100;
+					discount = discount + (compare2-compare1)*discountRate/100;
 				}else {
-					discount = discount + (totalAmount-compare1)*slab.getDiscount()/100;
+					discount = discount + (totalAmount-compare1)*discountRate/100;
 				}
 			}
 		}
 		return totalAmount-discount;
 	}
 	
-	public enum PremiumCustomerDiscountSlabs {
+	private enum PremiumCustomerDiscountSlabs {
 		SLAB1("0-4000",10),
 		SLAB2("4000-8000",15),
 		SLAB3("8000-12000",20),

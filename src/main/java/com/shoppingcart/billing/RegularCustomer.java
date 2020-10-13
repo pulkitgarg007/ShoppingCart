@@ -22,23 +22,23 @@ public class RegularCustomer implements BillingStrategy {
 				compare2 = Double.parseDouble(slab.getSlab().split("-")[1]);
 			}
 			if(totalAmount>compare1) {
+				double discountRate = slab.getDiscount();
 				if(compare2==null) {
-					discount = discount + (totalAmount-compare1)*slab.getDiscount()/100;
+					discount = discount + (totalAmount-compare1)*discountRate/100;
 				}else if(totalAmount>=compare2) {
-					discount = discount + (compare2-compare1)*slab.getDiscount()/100;
+					discount = discount + (compare2-compare1)*discountRate/100;
 				}else {
-					discount = discount + (totalAmount-compare1)*slab.getDiscount()/100;
+					discount = discount + (totalAmount-compare1)*discountRate/100;
 				}
 			}
 		}
 		return totalAmount-discount;
 	}
 	
-	public enum DiscountSlabs {
-		SLAB1("0-4000",10),
-		SLAB2("4000-8000",15),
-		SLAB3("8000-12000",20),
-		SLAB4("12000-end",30);
+	private enum DiscountSlabs {
+		SLAB1("0-5000",0),
+		SLAB2("5000-10000",10),
+		SLAB3("10000-end",20);
 		
 		private String slab;
 		private double discount;
